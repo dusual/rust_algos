@@ -83,29 +83,31 @@ fn make_random_vec(num_items: i32, max: i32) -> Vec<i32> {
 
 
 
-fn lomuto_partition(slice: &mut [i32], low: usize, high: usize) -> usize {
-    let pivot = slice[high];
-    let mut i = low;
-    for j in low..high {
+fn partition(slice: &mut [i32]) -> usize {
+    let lo: usize = 0;
+    let hi: usize = slice.len() - 1;
+    let pivot = slice[hi];
+    let mut i = lo as i32 - 1;
+    for j in lo..hi {
         if slice[j] <= pivot {
-            slice.swap(i, j);
             i += 1;
+            slice.swap(i as usize , j as usize);
         }
     }
-    slice.swap(i, high);
-    i
+    i += 1;
+    slice.swap(i as usize, hi as usize);
+    return i as usize;
 }
 
 
 // Use quick_sort sort to sort the vector.
-fn quick_sort(vec: &mut Vec<i32>, low: usize, high: usize) {
-    if low < high {
-        let pivot_index = lomuto_partition(vec, low, high);
-        if pivot_index > 0 {
-            quick_sort(vec, low, pivot_index - 1);
-        }
-        quick_sort(vec, pivot_index + 1, high);
+fn quick_sort(vec: &mut [i32]) {
+    if vec.len() < 2 {
+        return;
     }
+    let p = partition(&mut vec[0..]) as usize;
+    quick_sort(&mut vec[..p]);
+    quick_sort(&mut vec[p + 1 ..]);
 
 }
 
@@ -141,7 +143,7 @@ fn main() {
     let mut vec_sort = make_random_vec(num_items, max);
     print_vec(&vec_sort, num_items);
     let length = vec_sort.len() - 1;
-    quick_sort(&mut vec_sort, 0, length);
+    quick_sort(&mut vec_sort);
     print_vec(&vec_sort, num_items);
     let sorted = check_sorted(&vec_sort);
     if sorted {
