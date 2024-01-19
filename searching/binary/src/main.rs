@@ -114,7 +114,7 @@ fn binary_search(vec: &Vec<i32>, target: i32) -> i32 {
         let mid= (low + high)/2;
         let mid_value = vec[mid];
         if mid_value == target{
-            return (mid + 1).try_into().unwrap() ;
+            return (mid + 1) as i32 ;
         } else if mid_value > target{
             high = mid - 1;
         } else {
